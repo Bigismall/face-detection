@@ -19,21 +19,42 @@
       height: auto;
     }
 
+    #video-preview {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .two-columns {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+    }
+
+    .column {
+      flex: 0 1 50%;
+      border: 1px solid red;
+
+    }
+
   </style>
 </head>
 <body>
 <h1>Shape Detection API</h1>
 <p>Remember to enable Chrome Flags <code>chrome://flags#enable-experimental-web-platform-features</code></p>
 <h2>Face Detection</h2>
-<label>Choose image file:
-  <input type="file"
-         accept="image/*"
-         id="face-input">
-</label>
-<hr />
-<canvas width="auto"
-        height="auto"
-        id="canvas-preview"></canvas>
+<div class="two-columns">
+  <div class="column">
+    <video id="video-preview"
+           autoplay></video>
+
+  </div>
+  <div class="column">
+    <canvas width="auto"
+            height="auto"
+            id="canvas-preview"></canvas>
+  </div>
+</div>
 
 <script type="module">
   import detectFace from './js/detect.mjs';
@@ -43,27 +64,22 @@
     alert('Remember to enable Chrome Flags:\nchrome://flags#enable-experimental-web-platform-features');
   }
 
-  const faceInput = document.querySelector('#face-input');
   const canvasPreview = document.querySelector('#canvas-preview');
+  const videoPreview = document.querySelector('#video-preview');
   const canvasContext = canvasPreview.getContext('2d');
 
-  faceInput.addEventListener('change', async ({target}) => {
-    const [image] = target.files;
+  navigator.getUserMedia({audio: false, video: {width: 800, height: 600}}, stream => {
+    videoPreview.srcObject = stream;
 
-    if (!image) {
-      return;
-    }
+    setInterval(async () => {
+      const {bitmap, detection} = await detectFace(videoPreview);
+      canvasPreview.width = bitmap.width;
+      canvasPreview.height = bitmap.height;
+      canvasContext.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
+      drawFace(canvasContext, detection);
+    }, 100);
 
-    const {bitmap, detection} = await detectFace(image);
-    canvasPreview.width = bitmap.width;
-    canvasPreview.height = bitmap.height;
-    canvasContext.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
-    drawFace(canvasContext, detection);
-
-    console.log(image);
-    console.log(bitmap);
-    console.log(detection);
-  });
+  }, error => console.warn(error));
 
 </script>
 </body>
