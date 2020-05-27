@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <link rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="favicon-32x32.png">
+  <title>Schibsted Hackday - Face Detection API</title>
+  <link rel="stylesheet"
+        href="css/water-dark.css">
+  <style type="text/css">
+
+    #canvas-preview {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+  </style>
+</head>
+<body>
+<h1>Shape Detection API</h1>
+<p>Remember to enable Chrome Flags <code>chrome://flags#enable-experimental-web-platform-features</code></p>
+<h2>Face Detection</h2>
+<label>Choose image file:
+  <input type="file"
+         accept="image/*"
+         id="face-input">
+</label>
+<hr />
+<!--    <img id="face-preview"-->
+<!--         src=""-->
+<!--         alt="Image preview" />-->
+<canvas width="auto"
+        height="auto"
+        id="canvas-preview"></canvas>
+
+<script type="module">
+  import detectFace from './js/detect.mjs';
+  import drawFace from './js/canvas.mjs';
+
+  if (!window.hasOwnProperty('FaceDetector')) {
+    alert('Remember to enable Chrome Flags:\nchrome://flags#enable-experimental-web-platform-features');
+  }
+
+  const faceInput = document.querySelector('#face-input');
+  // const facePreview = document.querySelector('#face-preview');
+  const canvasPreview = document.querySelector('#canvas-preview');
+  const canvasContext = canvasPreview.getContext('2d');
+
+  faceInput.addEventListener('change', async ({target}) => {
+    // const reader = new FileReader();
+    const [image] = target.files;
+
+    if (!image) {
+      return;
+    }
+/*
+    reader.addEventListener('load', () => {
+      facePreview.src = reader.result;
+    }, false);
+
+    reader.readAsDataURL(image);
+*/
+    const {bitmap, detection} = await detectFace(image);
+    canvasPreview.width = bitmap.width;
+    canvasPreview.height = bitmap.height;
+    canvasContext.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
+    drawFace(canvasContext, detection);
+
+    console.log(image);
+    console.log(bitmap);
+    console.log(detection);
+
+  });
+
+</script>
+</body>
+</html>
+
