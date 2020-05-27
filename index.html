@@ -31,9 +31,6 @@
          id="face-input">
 </label>
 <hr />
-<!--    <img id="face-preview"-->
-<!--         src=""-->
-<!--         alt="Image preview" />-->
 <canvas width="auto"
         height="auto"
         id="canvas-preview"></canvas>
@@ -47,24 +44,16 @@
   }
 
   const faceInput = document.querySelector('#face-input');
-  // const facePreview = document.querySelector('#face-preview');
   const canvasPreview = document.querySelector('#canvas-preview');
   const canvasContext = canvasPreview.getContext('2d');
 
   faceInput.addEventListener('change', async ({target}) => {
-    // const reader = new FileReader();
     const [image] = target.files;
 
     if (!image) {
       return;
     }
-/*
-    reader.addEventListener('load', () => {
-      facePreview.src = reader.result;
-    }, false);
 
-    reader.readAsDataURL(image);
-*/
     const {bitmap, detection} = await detectFace(image);
     canvasPreview.width = bitmap.width;
     canvasPreview.height = bitmap.height;
@@ -74,7 +63,6 @@
     console.log(image);
     console.log(bitmap);
     console.log(detection);
-
   });
 
 </script>
