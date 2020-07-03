@@ -1,5 +1,5 @@
 const EYE_TO_FACE = 0.135;
-const MOUTH_TO_FACE_X = 0.5;
+const MOUTH_TO_FACE_X = 0.4
 const MOUTH_TO_FACE_Y = 0.16;
 const TWO_PI = 2 * Math.PI;
 
@@ -11,7 +11,7 @@ const drawLandmark = {
 function drawEye(canvasCtx, location, face) {
   const eyeRadius = Math.round(face.boundingBox.width * EYE_TO_FACE);
 
-  canvasCtx.strokeStyle = "#cc0";
+  canvasCtx.strokeStyle = "#fc0";
   canvasCtx.beginPath();
   canvasCtx.arc(location.x, location.y, eyeRadius, 0, TWO_PI);
   canvasCtx.stroke();
@@ -30,7 +30,7 @@ function drawMonth(canvasCtx, location, face) {
 }
 
 function drawBoundingBox(canvasCtx, face) {
-  canvasCtx.strokeStyle = "#0c0";
+  canvasCtx.strokeStyle = "#08c";
   canvasCtx.strokeRect(
     face.boundingBox.x,
     face.boundingBox.y,
@@ -40,11 +40,10 @@ function drawBoundingBox(canvasCtx, face) {
 }
 
 function drawFace(canvasContext, detectedFaceCollection) {
-  canvasContext.lineWidth = 5;
+  canvasContext.lineWidth = 3;
 
   detectedFaceCollection.map(face => {
     drawBoundingBox(canvasContext, face);
-
     face.landmarks.map(landmark => {
       drawLandmark[landmark.type](canvasContext, landmark.locations[0], face);
     });

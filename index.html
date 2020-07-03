@@ -1,87 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-  <link rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="favicon-32x32.png">
-  <title>Schibsted Hackday - Face Detection API</title>
-  <link rel="stylesheet"
-        href="css/water-dark.css">
-  <style type="text/css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <title>Schibsted Hackday - Face Detection API</title>
+    <link rel="stylesheet" href="css/water-dark.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+  </head>
+  <body>
+    <h1>Face Detection</h1>
+    <p>
+      Remember to enable Chrome Flags
+      <code>chrome://flags#enable-experimental-web-platform-features</code>
+    </p>
+    <div class="two-columns">
+      <div class="column column-left">
+        <canvas width="auto" height="auto" id="canvas-preview"></canvas>
+      </div>
+      <div class="column column-right">
+        <video id="video-preview" autoplay></video>
+        <img
+          src="images/helmet.png"
+          id="asset-helmet"
+          class="asset"
+          alt="helmet"
+        />
+      </div>
+    </div>
 
-    #canvas-preview {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
+    <script type="module">
+      import detectFace from "./js/detect.mjs";
+      import drawFace from "./js/canvas.mjs";
+      import drawSticker, { Stickers } from "./js/stickers.mjs";
 
-    #video-preview {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
+      if (!window.hasOwnProperty("FaceDetector")) {
+        alert(
+          "Remember to enable Chrome Flags:\nchrome://flags#enable-experimental-web-platform-features"
+        );
+      }
 
-    .two-columns {
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row;
-    }
+      const videoPreview = document.querySelector("#video-preview");
+      const canvasPreview = document.querySelector("#canvas-preview");
+      const canvasContext = canvasPreview.getContext("2d");
+      const helmet = document.querySelector("#asset-helmet");
 
-    .column {
-      flex: 0 1 50%;
-      border: 1px solid red;
+      navigator.getUserMedia(
+        { audio: false, video: { width: 800, height: 600 } },
+        stream => {
+          videoPreview.srcObject = stream;
 
-    }
-
-  </style>
-</head>
-<body>
-<h1>Shape Detection API</h1>
-<p>Remember to enable Chrome Flags <code>chrome://flags#enable-experimental-web-platform-features</code></p>
-<h2>Face Detection</h2>
-<div class="two-columns">
-  <div class="column">
-    <canvas width="auto"
-            height="auto"
-            id="canvas-preview"></canvas>
-  </div>
-  <div class="column">
-    <video id="video-preview"
-           autoplay></video>
-
-  </div>
-</div>
-
-<script type="module">
-  import detectFace from './js/detect.mjs';
-  import drawFace from './js/canvas.mjs';
-
-  if (!window.hasOwnProperty('FaceDetector')) {
-    alert('Remember to enable Chrome Flags:\nchrome://flags#enable-experimental-web-platform-features');
-  }
-
-  const canvasPreview = document.querySelector('#canvas-preview');
-  const videoPreview = document.querySelector('#video-preview');
-  const canvasContext = canvasPreview.getContext('2d');
-
-  navigator.getUserMedia({audio: false, video: {width: 800, height: 600}}, stream => {
-    videoPreview.srcObject = stream;
-
-    setInterval(async () => {
-      const {bitmap, detection} = await detectFace(videoPreview);
-      canvasPreview.width = bitmap.width;
-      canvasPreview.height = bitmap.height;
-      canvasContext.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
-      drawFace(canvasContext, detection);
-    }, 1000);
-
-  }, error => console.warn(error));
-
-</script>
-</body>
+          setInterval(async () => {
+            const { bitmap, detection } = await detectFace(videoPreview);
+            canvasPreview.width = bitmap.width;
+            canvasPreview.height = bitmap.height;
+            canvasContext.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
+            drawFace(canvasContext, detection);
+            drawSticker(canvasContext, detection, Stickers.helmet);
+          }, 100);
+        },
+        error => console.warn(error)
+      );
+    </script>
+  </body>
 </html>
-
