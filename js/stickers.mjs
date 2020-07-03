@@ -13,6 +13,15 @@ export const Stickers = {
       face.boundingBox.width * 2,
       face.boundingBox.height * 1.8
     ]
+  },
+  terminator: {
+    src: imageAsset("images/terminator-skull.png"),
+    coords: face => [
+      face.boundingBox.x - face.boundingBox.width / 4,
+      face.boundingBox.y - face.boundingBox.height * 0.75,
+      face.boundingBox.width * 1.5,
+      face.boundingBox.height * 2
+    ]
   }
 };
 

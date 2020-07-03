@@ -20,12 +20,33 @@
       </div>
       <div class="column column-right">
         <video id="video-preview" autoplay></video>
-        <img
-          src="images/helmet.png"
-          id="asset-helmet"
-          class="asset"
-          alt="helmet"
-        />
+        <fieldset>
+          <legend>Display options</legend>
+          <label for="controls-landmarks">
+            <input type="checkbox" id="controls-landmarks" />
+            face detection landmarks
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Stickers</legend>
+          <label>
+            <input
+              type="radio"
+              name="sticker"
+              id="controls-sticker-none"
+              checked
+            />
+            none
+          </label>
+          <label>
+            <input type="radio" name="sticker" id="controls-sticker-helmet" />
+            helmet
+          </label>
+          <label>
+            <input type="radio" name="sticker" id="controls-sticker-skull" />
+            skull
+          </label>
+        </fieldset>
       </div>
     </div>
 
@@ -43,7 +64,6 @@
       const videoPreview = document.querySelector("#video-preview");
       const canvasPreview = document.querySelector("#canvas-preview");
       const canvasContext = canvasPreview.getContext("2d");
-      const helmet = document.querySelector("#asset-helmet");
 
       navigator.getUserMedia(
         { audio: false, video: { width: 800, height: 600 } },
@@ -55,8 +75,8 @@
             canvasPreview.width = bitmap.width;
             canvasPreview.height = bitmap.height;
             canvasContext.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
-            drawFace(canvasContext, detection);
-            drawSticker(canvasContext, detection, Stickers.helmet);
+            //drawFace(canvasContext, detection);
+            drawSticker(canvasContext, detection, Stickers.terminator);
           }, 100);
         },
         error => console.warn(error)
