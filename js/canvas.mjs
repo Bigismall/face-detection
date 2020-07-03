@@ -38,13 +38,6 @@ function drawBoundingBox(canvasCtx, face) {
     face.boundingBox.width,
     face.boundingBox.height
   );
-
-  //temporary draw line between eyes
-  const eyes = face.landmarks.filter(item => item.type === "eye");
-  canvasCtx.strokeStyle = "#0c8";
-  canvasCtx.moveTo(eyes[0].locations[0].x, eyes[0].locations[0].y);
-  canvasCtx.lineTo(eyes[1].locations[0].x, eyes[1].locations[0].y);
-  canvasCtx.stroke();
 }
 
 function drawFace(canvasContext, detectedFaceCollection) {
