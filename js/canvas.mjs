@@ -1,5 +1,5 @@
 const EYE_TO_FACE = 0.135;
-const MOUTH_TO_FACE_X = 0.4
+const MOUTH_TO_FACE_X = 0.4;
 const MOUTH_TO_FACE_Y = 0.16;
 const TWO_PI = 2 * Math.PI;
 
@@ -16,6 +16,7 @@ function drawEye(canvasCtx, location, face) {
   canvasCtx.arc(location.x, location.y, eyeRadius, 0, TWO_PI);
   canvasCtx.stroke();
 }
+
 function drawMonth(canvasCtx, location, face) {
   const mouthWidth = Math.round(face.boundingBox.width * MOUTH_TO_FACE_X);
   const mouthHeight = Math.round(face.boundingBox.height * MOUTH_TO_FACE_Y);
@@ -37,10 +38,17 @@ function drawBoundingBox(canvasCtx, face) {
     face.boundingBox.width,
     face.boundingBox.height
   );
+
+  //temporary draw line between eyes
+  const eyes = face.landmarks.filter(item => item.type === "eye");
+  canvasCtx.strokeStyle = "#0c8";
+  canvasCtx.moveTo(eyes[0].locations[0].x, eyes[0].locations[0].y);
+  canvasCtx.lineTo(eyes[1].locations[0].x, eyes[1].locations[0].y);
+  canvasCtx.stroke();
 }
 
 function drawFace(canvasContext, detectedFaceCollection) {
-  canvasContext.lineWidth = 3;
+  canvasContext.lineWidth = 2;
 
   detectedFaceCollection.map(face => {
     drawBoundingBox(canvasContext, face);

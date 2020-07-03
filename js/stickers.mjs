@@ -13,15 +13,29 @@ export const Stickers = {
       face.boundingBox.width * 2,
       face.boundingBox.height * 1.8
     ]
+  },
+  skull: {
+    src: imageAsset("images/terminator-skull.png"),
+    coords: face => [
+      face.boundingBox.x - face.boundingBox.width / 4,
+      face.boundingBox.y - face.boundingBox.height * 0.75,
+      face.boundingBox.width * 1.5,
+      face.boundingBox.height * 2
+    ]
   }
 };
 
-export default function drawHelmet(
+export default function drawSticker(
   canvasContext,
   detectedFaceCollection,
-  sticker
+  stickerName
 ) {
-  detectedFaceCollection.map(face =>
-    canvasContext.drawImage(sticker.src, ...sticker.coords(face))
-  );
+  detectedFaceCollection.map(face => {
+    if (stickerName) {
+      canvasContext.drawImage(
+        Stickers[stickerName].src,
+        ...Stickers[stickerName].coords(face)
+      );
+    }
+  });
 }
