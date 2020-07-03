@@ -14,7 +14,7 @@ export const Stickers = {
       face.boundingBox.height * 1.8
     ]
   },
-  terminator: {
+  skull: {
     src: imageAsset("images/terminator-skull.png"),
     coords: face => [
       face.boundingBox.x - face.boundingBox.width / 4,
@@ -25,12 +25,17 @@ export const Stickers = {
   }
 };
 
-export default function drawHelmet(
+export default function drawSticker(
   canvasContext,
   detectedFaceCollection,
-  sticker
+  stickerName
 ) {
-  detectedFaceCollection.map(face =>
-    canvasContext.drawImage(sticker.src, ...sticker.coords(face))
-  );
+  detectedFaceCollection.map(face => {
+    if (stickerName) {
+      canvasContext.drawImage(
+        Stickers[stickerName].src,
+        ...Stickers[stickerName].coords(face)
+      );
+    }
+  });
 }
